@@ -2,7 +2,7 @@ import requests
 import os
 from flask import Flask, Response, __version__
 
-IMMO_SEARCH_URL = 'https://www.immobilienscout24.de/Suche/S-2/Wohnung-Miete/Polygonsuche/%7B_r_IsyqpAmJap@%7Bb@yv@gb@cAsPyJqc@%7Bw@uJ_iA%7C%7C@yiEr_A_iArp@%7BfAnTkp@bj@mTj~Aj_A%7COvv@aLjp@rR~j@fS%60@hOyJ%60l@g%7D@zf@eBtNdkAeDb%7C@%7BWf%7D@qTjSwYlEcY~wAmm@j%7CA_aAbyAoc@lEm%5CdPaj@iC/1,50-/-/EURO--700,00#/'
+IMMO_SEARCH_URL = 'https://www.immobilienscout24.de/Suche/S-2/Wohnung-Miete/Polygonsuche/%7B_r_IsyqpAmJap@%7Bb@yv@gb@cAsPyJqc@%7Bw@uJ_iA%7C%7C@yiEr_A_iArp@%7BfAnTkp@bj@mTniAxJpPmDhQnTtNtcA%7Cq@ooA%7DBnr@lZ%7CgAzf@eBtNdkAeDb%7C@%7BWf%7D@qTjSwYlEcY~wAmm@j%7CA_aAbyAoc@lEm%5CdPaj@iC/1,00-/-/EURO--700,00/-/-/false?enteredFrom=result_list#/'
 DB_BUCKET = os.environ['DB_BUCKET']
 DB_KEY = 'seen_apartments'
 DB_AUTH_KEY = os.environ['DB_AUTH_KEY']
