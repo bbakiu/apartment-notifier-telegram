@@ -4,6 +4,8 @@
 
 This application is built to send push notifications for new apartments using an ImmobilienScout search query.
 
+This repo is a slighlty modified version of: https://github.com/gavronek/apartment-notifier. The difference is in using Telegram to send notification and not [Pushbullet](https://www.pushbullet.com/)
+
 ## External services
 
 The application is built to be hosted free and using the free plan of variaty of services online. In order to host the application yourself you will need an account in the following services:
