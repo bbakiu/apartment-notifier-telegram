@@ -89,17 +89,16 @@ $ now secrets add chat_id $CHAT_ID
 ### Customize ImmobilienScout search link
 
 
-The variable `IMMO_SEARCH_URL` which is just an ImmobilienScout24 URL. 
+The variable `IMMO_SEARCH_URL` is just an ImmobilienScout24 URL. 
 
 This URL is used for scraping and for a properly functioning application you should make sure that the URL is having the following properties:
 - Apartments are in list view (and not map)
 - Sorted by date, so that newest are first. This is expecially important as you only request the first page and looking for new stuff on that page.
 
-After you have copied the URL run: 
+After you have copied the URL from the browser run: 
 ```
 export IMMO_SEARCH_URL=<YOUR_IMMO_URL>
 now secrets add immo_search_url $IMMO_SEARCH_URL
-
 ```
 
 Feel free to go crazy with search criterias, you just need to update the variable.
