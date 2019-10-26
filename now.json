@@ -1,5 +1,5 @@
 {
-    "version": 3,
+    "version": 2,
     "name": "apartment-notifier",
     "env": {
         "DB_BUCKET": "@db_bucket",
