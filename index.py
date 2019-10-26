@@ -2,22 +2,25 @@ import requests
 import os
 from flask import Flask, Response, __version__
 
-IMMO_SEARCH_URL = 'https://www.immobilienscout24.de/Suche/S-2/Wohnung-Miete/Polygonsuche/%7B_r_IsyqpAmJap@%7Bb@yv@gb@cAsPyJqc@%7Bw@uJ_iA%7C%7C@yiEr_A_iArp@%7BfAnTkp@bj@mTniAxJpPmDhQnTtNtcA%7Cq@ooA%7DBnr@lZ%7CgAzf@eBtNdkAeDb%7C@%7BWf%7D@qTjSwYlEcY~wAmm@j%7CA_aAbyAoc@lEm%5CdPaj@iC/1,00-/-/EURO--700,00/-/-/false?enteredFrom=result_list#/'
 DB_BUCKET = os.environ['DB_BUCKET']
 DB_KEY = 'seen_apartments'
 DB_AUTH_KEY = os.environ['DB_AUTH_KEY']
-NOTIFICATION_URL = 'https://api.pushbullet.com/v2/pushes'
-NOTIFICATION_AUTH_KEY = os.environ['NOTIFICATION_AUTH_KEY']
+BOT_TOKEN = os.environ['BOT_TOKEN']
+CHAT_ID = os.environ['CHAT_ID']
+IMMO_SEARCH_URL = os.environ['IMMO_SEARCH_URL']
+# 'https://www.immobilienscout24.de/Suche/S-2/Wohnung-Miete/Umkreissuche/Berlin_2dFriedrichshain_20_28Friedrichshain_29/-/231213/2510074/-/1276003001017/10/2,00-/45,00-/EURO--700,00'
 
 app = Flask(__name__)
 
 @app.route('/findplaces')
 def find_new_places():
+    TELEGRAM_URL = f'https://api.telegram.org/bot{BOT_TOKEN}/sendMessage'
     seen_apartments = requests.get(f'https://kvdb.io/{DB_BUCKET}/{DB_KEY}', auth=(DB_AUTH_KEY, '')).json()
-
     apartments = requests.post(IMMO_SEARCH_URL).json()['searchResponseModel']['resultlist.resultlist']['resultlistEntries'][0]['resultlistEntry']
 
     unseen_apartments = []
+
+    public_companies = ["WBM", "HOWOGE", "GESOBAU", "GEWOBAG", "STADT UND LAND", "WOBEGE"]
 
     for apartment in apartments:
         if apartment['@id'] not in seen_apartments:
@@ -28,18 +31,27 @@ def find_new_places():
 
     for a in unseen_apartments:
         apartment = a['resultlist.realEstate']
-
-        data = {
-            'type': 'link',
-            'title': f"New Apartment: {apartment['title']}",
-            'body': f"Address: {apartment['address']['description']}\nSize: {apartment['livingSpace']}\nPrice (warm): {apartment['calculatedPrice']['value']} EUR",
-            'url': f"https://www.immobilienscout24.de/expose/{a['@id']}"
+        isPublic = False
+        
+        if 'realtorCompanyName' in apartment:
+            company = apartment['realtorCompanyName'].upper()
+            for c in public_companies:
+                if company.find(c) != -1:
+                    isPublic = True
+        
+        text = f"*New Apartment: {apartment['title']}* - *Address*: {apartment['address']['description']} - *Size*:{apartment['livingSpace']} - *Price (warm)*: {apartment['calculatedPrice']['value']} EUR - [https://www.immobilienscout24.de/expose/{a['@id']}](https://www.immobilienscout24.de/expose/{a['@id']})",
+        params = {
+            'chat_id': CHAT_ID,
+            'text': text,
+            'parse_mode': 'Markdown'
         }
-
-        parsed_unseen_apartments.append(data)
-
-        requests.post(NOTIFICATION_URL, headers={'Access-Token': NOTIFICATION_AUTH_KEY}, json=data)
-
+        parsed_unseen_apartments.append(text)
+        # If you are interested only in public companies uncomment the next 2 line.
+        # if isPublic:
+            # requests.post(TELEGRAM_URL, params=params)
+        
+        # If you are interested only in public companies comment out the next line.
+        requests.post(TELEGRAM_URL, params=params)
     requests.post(f'https://kvdb.io/{DB_BUCKET}/{DB_KEY}', auth=(DB_AUTH_KEY, ''), json=seen_apartments)
 
     return {
