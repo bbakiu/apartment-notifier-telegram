@@ -14,7 +14,7 @@ The application is built to be hosted free and using the free plan of variaty of
 - [Telegram Messenger](https://telegram.org/) - Cross-platform messaging application for instant notifications. Use this as a tool to receive push notifications.
 
 Suggested, but not required:
-- [Freshping](https://www.freshworks.com/website-monitoring/) - Website monitoring service. I use this to keep an eye if the service fails, moreover it serves as an easy scheduling service. 
+- [Freshping](https://www.freshworks.com/website-monitoring/) - Website monitoring service. Use this to keep an eye if the service fails, moreover it serves as an easy scheduling service. 
 
 ## Set up
 
@@ -30,13 +30,13 @@ We need to create a bucket on kvdb.io secured by a key. It has a handy API, whic
 Save the bucket id and your secret key for later, the application will need both to run!
 
 ```
-$ export DB_AUTH_KEY=my_db_key
+$ export DB_AUTH_KEY=<YOUR_DB_KEY>
 $ export DB_BUCKET=$(curl -d 'email=<YOUR_EMAIL>' -d "secret_key=$DB_AUTH_KEY" https://kvdb.io)
 ```
 
 Next we need to initialize the key with an empty json array, where the apartment ids will be stored.
 ```
-curl -d '[]' https://kvdb.io/$DB_BUCKET/seen_apartments
+$ curl -d '[]' https://kvdb.io/$DB_BUCKET/seen_apartments
 ```
 
 ### Store API secrets for deployment in Zeit
@@ -57,7 +57,7 @@ $ export BOT_TOKEN=<TELEGRAM_BOT_TOKEN>
 From telegram you are going to need also a chat id, which in the id of your chat with the bot. 
 Write a couple of dummy messages to the bot you just created and run this command:
 ```
-curl https://api.telegram.org/bot<YourBOTToken>/getUpdates
+$ curl https://api.telegram.org/bot<YourBOTToken>/getUpdates
 ```
 
 Look for the "chat" object in the message you will get. It is something along the lines:
@@ -97,8 +97,8 @@ This URL is used for scraping and for a properly functioning application you sho
 
 After you have copied the URL from the browser run: 
 ```
-export IMMO_SEARCH_URL=<YOUR_IMMO_URL>
-now secrets add immo_search_url $IMMO_SEARCH_URL
+$ export IMMO_SEARCH_URL=<YOUR_IMMO_URL>
+$ now secrets add immo_search_url $IMMO_SEARCH_URL
 ```
 
 Feel free to go crazy with search criterias, you just need to update the variable.
@@ -115,5 +115,5 @@ $ now
 
 ### Execute
 
-The application offers a single GET endpoint `\findplaces`. It returns the unseen apartments as a json, but it also sends a notification for each of them via Telegram.
+The application offers a single GET endpoint `/findplaces`. It returns the unseen apartments as a json, but it also sends a notification for each of them via Telegram.
 On this same endpoint you can set up a regular execution as well. I use [Freshping](https://www.freshworks.com/website-monitoring/) for this purpose.
