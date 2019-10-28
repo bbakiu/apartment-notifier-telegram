@@ -116,4 +116,4 @@ $ now
 ### Execute
 
 The application offers a single GET endpoint `/findplaces`. It returns the unseen apartments as a json, but it also sends a notification for each of them via Telegram.
-On this same endpoint you can set up a regular execution as well. I use [Freshping](https://www.freshworks.com/website-monitoring/) for this purpose.
+On this same endpoint you can set up a regular execution as well. You can use [Freshping](https://www.freshworks.com/website-monitoring/) for this purpose.
